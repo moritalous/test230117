@@ -5,7 +5,7 @@ on: [push]
 
 permissions:
   id-token: write # This is required for requesting the JWT
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,11 +18,16 @@ jobs:
 
       - run: npm ci    
 
+      - run: npm run build
+
       - uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::547194329427:role/github-oicd-template-Role-1L0NPTNZKTP9D
           # role-session-name: MySessionName
-          
+
+      - run: npm ci
+        working-directory: ./cdk
+
       - run: npx -y cdk deploy --require-approval never
         working-directory: ./cdk
