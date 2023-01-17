@@ -12,5 +12,25 @@ export class CdkStack extends cdk.Stack {
     // const queue = new sqs.Queue(this, 'CdkQueue', {
     //   visibilityTimeout: cdk.Duration.seconds(300)
     // });
+
+    const bucket = new cdk.aws_s3.Bucket(this, 'bucket')
+
+    const distribution = new cdk.aws_cloudfront.Distribution(this, 'distribution', {
+      defaultBehavior: {
+        origin: new cdk.aws_cloudfront_origins.S3Origin(bucket)
+      },
+      defaultRootObject: 'index.html'
+    })
+
+    new cdk.aws_s3_deployment.BucketDeployment(this, 'deploy', {
+      sources: [cdk.aws_s3_deployment.Source.asset('../build')],
+      destinationBucket: bucket,
+      distribution: distribution,
+      distributionPaths: ['/']
+    })
+
+    new cdk.CfnOutput(this, 'bucket_bucketName', { value: bucket.bucketName })
+    new cdk.CfnOutput(this, 'distribution_domainName', { value: distribution.domainName })
+
   }
 }
