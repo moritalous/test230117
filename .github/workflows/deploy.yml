@@ -15,7 +15,7 @@ jobs:
 
       - run: npm ci    
 
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::547194329427:role/github-oicd-template-Role-1L0NPTNZKTP9D
